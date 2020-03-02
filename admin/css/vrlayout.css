@@ -1,0 +1,8 @@
+.cover {
+  object-fit: cover;
+  width: 100%;
+  height: 180px;
+}
+.bordered{
+  border: solid bisque 1px;
+}
