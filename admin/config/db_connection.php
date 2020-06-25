@@ -20,5 +20,5 @@ define('DB_SERVER', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', 'root');
 define('DB_NAME', 'virtualreality');
-define("WWW_ROOT", "http://localhost/VR-v3");
+define("WWW_ROOT", "http://localhost/VR-v3/admin");
 }

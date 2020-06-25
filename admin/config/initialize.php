@@ -44,7 +44,7 @@
     //echo $class."1<br/>";
     if(preg_match('/\A\w+\Z/', $class)) {
      $class= strtolower($class);
-  //   echo 'classes/' . $class . '.class.php <br/>';
+   // echo 'classes/' . $class . '.class.php <br/>';
       include('classes/' . $class . '.class.php');
     }
   }
@@ -54,5 +54,9 @@
   DatabaseObject::set_database($database);
 
   $session = new Session;
- 
+  $comment= new Comment;
+  $react= new React;
+  $view= new View;
+  $likes= new Like;
+  $share= new Share;
 ?>

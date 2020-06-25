@@ -2,136 +2,197 @@
 if(!$session->is_logged_in()){
   redirect_to(url_for('login.php'));
 }
-
+$id;
+if(isset($_GET['id'])){
+    $id=$_GET['id'];
+}
+  $vrimages = VRWorld::get_vw_images($id);  
+  if(!$vrimages){
+    redirect_to(url_for('vr.php?ms=invalid_id&reff=vrworld'));  
+  }
 HTML::head("Virtual Home","vr");
 ?>
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
+<body class="skin-megna fixed-layout">
+    
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Elite admin</p>
+        </div>
+    </div>
+    
+    <div id="main-wrapper">
  
 <?php 
- HTML::navbar('');
+ HTML::topbar('');
  HTML::sidebar('');
- 
 ?>
-
-  <!-- Content Wrapper. Contains page content -->
-   
-    <!-- /.content-header -->
-
-      <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Virtual Reality Worlds</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Ribbons</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Ribbons</h3>
-              </div>
-          <?php $list = VRWorld::get_list(); ?>
-
-              <!-- /.card-header -->
-              <div class="card-body">
-              <div class="row"><!-- OLD TOP-->
-                <?php   
-                if ($list) {
-                /* echo "<pre>";
-                  print_r($list);
-                  echo "</pre>"; */
-                foreach ($list as $key => $item) { 
-                    $item->primary_img=$item->path."/".$item->filename;
-                    $thumnails=$item->thumnails_path."/".$item->filename;
-                    $thumnails= img_check("/".$thumnails);
-                   
-                    ?>
-                    
-                <div class="col-sm-4 bordered">
-                    <p><?php echo $item->title; ?></p>
-                    <div class="position-relative  bg-gray" style="height: 180px">
-                     <a href="vrview.php?id=<?php echo $item->id; ?>"> 
-                         
-                        <figure class="cropped-image">
-                            <img src="<?php echo $thumnails ?>"  height="180" class="cover" />
-                        </figure>
-                     </a>
+ <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h4 class="text-themecolor">Dashboard Page</h4>
                     </div>
-                  </div>
+                    <div class="col-md-7 align-self-center text-right">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                                <li class="breadcrumb-item "><a href="vr.php">VR World</a></li>
+                                <li class="breadcrumb-item active">VR View</li>
+                            </ol>
+                            <button type="button" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Create New</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row el-element-overlay">
+                  
+                    <!-- column -->
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">VR View</h5>
+                                <div class="row m-t-30">
+                                    <!-- column -->
+                                    <?php   
+                if ($vrimages) {
+                   // echo "<pre>";
+                    //print_r($vrimages);
+                   // echo "</pre>";
+                    foreach ($vrimages as $key => $item) { 
+                        $item->primary_img=$item->path."/".$item->filename;
+                        $thumnails=$item->thumnails_path."/".$item->filename;
+                        $thumnails= img_check("/".$thumnails);
+                       
+                    ?>
+               
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1"> <img src="<?php echo $thumnails;  ?>" alt="user" />
+                                                
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                    <li><a class="img-circle font-20" href="vrview.php?action=view&id=<?php echo  $item->id; ?>"><i class="ti-control-play"></i></a></li>
+                                                        <li><a class="img-circle font-20" href="vrview.php?action=edit&id=<?php echo  $item->id; ?>""><i class="ti-pencil-alt"></i></a></li>
+                                                        <li><a class="img-circle font-20" href="vrview.php?action=remove&id=<?php echo  $item->id; ?>""><i class="ti-trash"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
 
-                 
-                  <?php 
-                     if(is_int(($key+1)/3)){ //if 3 the create a row
-                      ?> 
-                        </div><!--- end row -->
-                    <?php  }
-
-                     if(is_int(($key+1)/3)){ //if 3 the create a row
-                      ?> 
-                 <div class="row mt-4"><!--- Start row -->
-                    <?php  } 
-                    }
-                  } ?>
-                     
-                </div><!-- OLD -->
-                
-              </div>
-              <!-- /.card-body -->
+                    <?php } 
+                  }?>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- column -->
+                    
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Right sidebar -->
+                <!-- ============================================================== -->
+                <!-- .right-sidebar -->
+                <div class="right-sidebar">
+                    <div class="slimscrollright">
+                        <div class="rpanel-title"> Service Panel <span><i class="ti-close right-side-toggle"></i></span> </div>
+                        <div class="r-panel-body">
+                            <ul id="themecolors" class="m-t-20">
+                                <li><b>With Light sidebar</b></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-default" class="default-theme">1</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-green" class="green-theme">2</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-red" class="red-theme">3</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-blue" class="blue-theme">4</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-purple" class="purple-theme">5</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-megna" class="megna-theme working">6</a></li>
+                                <li class="d-block m-t-30"><b>With Dark sidebar</b></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-default-dark" class="default-dark-theme ">7</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-green-dark" class="green-dark-theme">8</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-red-dark" class="red-dark-theme">9</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-blue-dark" class="blue-dark-theme">10</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-purple-dark" class="purple-dark-theme">11</a></li>
+                                <li><a href="javascript:void(0)" data-skin="skin-megna-dark" class="megna-dark-theme ">12</a></li>
+                            </ul>
+                            <ul class="m-t-20 chatonline">
+                                <li><b>Chat option</b></li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/1.jpg" alt="user-img" class="img-circle"> <span>Varun Dhavan <small class="text-success">online</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/2.jpg" alt="user-img" class="img-circle"> <span>Genelia Deshmukh <small class="text-warning">Away</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/3.jpg" alt="user-img" class="img-circle"> <span>Ritesh Deshmukh <small class="text-danger">Busy</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/4.jpg" alt="user-img" class="img-circle"> <span>Arijit Sinh <small class="text-muted">Offline</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/5.jpg" alt="user-img" class="img-circle"> <span>Govinda Star <small class="text-success">online</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/6.jpg" alt="user-img" class="img-circle"> <span>John Abraham<small class="text-success">online</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/7.jpg" alt="user-img" class="img-circle"> <span>Hritik Roshan<small class="text-success">online</small></span></a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)"><img src="assets/images/users/8.jpg" alt="user-img" class="img-circle"> <span>Pwandeep rajan <small class="text-success">online</small></span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Right sidebar -->
+                <!-- ============================================================== -->
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+           
         </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-
-  <?php 
-  HTML::footer('');
-  ?>
-  
-</div>
-<!-- ./wrapper -->
-
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE -->
-<script src="js/adminlte.js"></script>
-
-<!-- OPTIONAL SCRIPTS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
-<script src="js/demo.js"></script>
-<script src="js/pages/dashboard3.js"></script>
+        
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="assets/node_modules/popper/popper.min.js"></script>
+    <script src="assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="dist/js/perfect-scrollbar.jquery.min.js"></script>
+     
+    <!--Menu sidebar -->
+    <script src="dist/js/sidebarmenu.js"></script>
+    <!--stickey kit -->
+    
+    <!--Custom JavaScript -->
+    <script src="dist/js/custom.min.js"></script>
 </body>
+
 </html>

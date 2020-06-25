@@ -14,8 +14,8 @@ class Session {
     if($user_object) {
       // prevent session fixation attacks
       session_regenerate_id();
-      $_SESSION['virtual_account_id'] = $user_object->id;
-     $_SESSION['virtual_account_fullname'] =$user_object->full_name();
+      $_SESSION['virtual_admin_id'] = $user_object->id;
+     $_SESSION['virtual_admin_fullname'] =$user_object->full_name();
       $this->user_object_id = $user_object->id;
       $this->user_object_fullname= $user_object->full_name();
     }
@@ -27,16 +27,16 @@ class Session {
   }
 
   public function logout() {
-    unset($_SESSION['virtual_account_id']);
-    unset($_SESSION['virtual_account_fullname']);
+    unset($_SESSION['virtual_admin_id']);
+    unset($_SESSION['virtual_admin_fullname']);
     unset($this->user_object_id);
      unset($this->user_object_fullname);
     return true;
   }
 
   private function check_stored_login() {
-    if(isset($_SESSION['virtual_account_id'])) {
-      $this->user_object_id = $_SESSION['virtual_account_id'];
+    if(isset($_SESSION['virtual_admin_id'])) {
+      $this->user_object_id = $_SESSION['virtual_admin_id'];
     }
   }
     public function session_fullname() {
